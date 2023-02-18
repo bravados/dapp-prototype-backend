@@ -45,6 +45,16 @@ $ yarn run start:dev
 $ yarn run start:prod
 ```
 
+## Database
+
+For local development, you must create the docker container
+
+```
+docker-compose up
+```
+
+To connect to the instance from DBeaver, ensure that "allowPublicKeyRetrieval" is set to true (Connection settings -> Driver properties)
+
 ## Test
 
 ```bash
