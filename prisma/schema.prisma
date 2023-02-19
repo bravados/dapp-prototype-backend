@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserType {
+  ARTIST
+  INDIVIDUAL
+  ADMIN
+}
+
+enum Blockchain {
+  NEAR
+}
+
+model Wallet {
+  id    Int     @default(autoincrement()) @id
+  blockchain Blockchain
+  address String
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([blockchain, address])
+}
+
+model User {
+  id    Int     @default(autoincrement()) @id
+  name  String  @unique
+  email String  @unique
+  avatar String @unique
+  type UserType
+  wallets Wallet[]
+}
