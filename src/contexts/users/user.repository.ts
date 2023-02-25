@@ -36,4 +36,4 @@ class UserPrismaRepository extends PrismaRepository implements UserRepository {
   }
 }
 
-export { UserPrismaRepository };
+export { UserRepository, UserPrismaRepository };

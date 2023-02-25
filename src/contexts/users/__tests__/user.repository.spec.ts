@@ -38,7 +38,7 @@ describe('User repository', () => {
         findFirstOrThrowMock.mockReturnValue(userMock);
       });
 
-      it('returns the user if the wallet exists', async () => {
+      it('returns the user', async () => {
         const user = await repository.findByWallet(walletMock);
 
         expect(findFirstOrThrowMock).toHaveBeenCalledWith(conditions);
@@ -51,7 +51,7 @@ describe('User repository', () => {
         findFirstOrThrowMock.mockRejectedValue(new Error());
       });
 
-      it('throws an error if the wallet does not exist', async () => {
+      it('throws an error', async () => {
         await expect(
           repository.findByWallet(walletMock),
         ).rejects.toThrowError();
