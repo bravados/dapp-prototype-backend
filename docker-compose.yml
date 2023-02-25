@@ -12,6 +12,6 @@ services:
     expose:
       - $DB_PORT
     volumes:
-      - kirunalabs-db:/var/lib/mysql
+      - mysqldata:/var/lib/mysql
 volumes:
-  kirunalabs-db:
+  mysqldata:
