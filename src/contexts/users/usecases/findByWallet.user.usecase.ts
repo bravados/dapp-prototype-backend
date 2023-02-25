@@ -1,21 +1,24 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Blockchain, Wallet } from '@contexts/wallets/wallet.entity';
-import { UnknownBlockchainError } from '@contexts/wallets/wallet.error';
+import {
+  IsAlphanumeric,
+  IsSupportedBlockchain,
+} from '@infrastructure/http/validators';
 import { UserRepository } from '../user.repository';
 import { User } from '../user.entity';
 import { UserNotFoundError } from '../user.error';
 
-type FindByWalletUseCaseDTO = {
+class FindByWalletUseCaseDTO {
+  @IsSupportedBlockchain({ message: 'Blockchain not supported' })
   blockchain: string;
+
+  @IsAlphanumeric()
   address: string;
-};
+}
 
-const mapToWallet = ({ blockchain, address }: FindByWalletUseCaseDTO) => {
+const mapToWallet = ({ address }: FindByWalletUseCaseDTO) => {
   const wallet = new Wallet();
-
-  if (blockchain != Blockchain.NEAR) throw new UnknownBlockchainError();
-
-  wallet.blockchain = blockchain;
+  wallet.blockchain = Blockchain.NEAR;
   wallet.address = address;
 
   return wallet;
@@ -28,7 +31,7 @@ class FindByWalletUseCase {
     private userRepository: UserRepository,
   ) {}
 
-  async do(params: FindByWalletUseCaseDTO): Promise<User> {
+  async doit(params: FindByWalletUseCaseDTO): Promise<User> {
     const wallet = mapToWallet(params);
 
     try {
@@ -39,4 +42,4 @@ class FindByWalletUseCase {
   }
 }
 
-export { FindByWalletUseCase };
+export { FindByWalletUseCase, FindByWalletUseCaseDTO };

@@ -1,4 +1,3 @@
-import { UnknownBlockchainError } from '@contexts/wallets/wallet.error';
 import { UserNotFoundError } from '../../user.error';
 import { FindByWalletUseCase } from '../findByWallet.user.usecase';
 
@@ -11,22 +10,6 @@ jest.mock('@contexts/users/user.repository', () => ({
 }));
 
 describe('findByWallet', () => {
-  describe('when the blockchain is not recognized', () => {
-    it('throws a UnknownBlockchainError', async () => {
-      const findByWalletUseCase = new FindByWalletUseCase(userRepositoryMock);
-      const params = {
-        blockchain: 'APTOS',
-        address: '123',
-      };
-
-      expect(findByWalletUseCase.do(params)).rejects.toThrow(
-        UnknownBlockchainError,
-      );
-
-      expect(userRepositoryMock.findByWallet).not.toHaveBeenCalled();
-    });
-  });
-
   describe('when the wallet cannot be found', () => {
     beforeEach(() => {
       userRepositoryMock.findByWallet.mockRejectedValue(new Error());
@@ -45,7 +28,9 @@ describe('findByWallet', () => {
         user: undefined,
       };
 
-      expect(findByWalletUseCase.do(params)).rejects.toThrow(UserNotFoundError);
+      expect(findByWalletUseCase.doit(params)).rejects.toThrow(
+        UserNotFoundError,
+      );
 
       expect(userRepositoryMock.findByWallet).toHaveBeenCalledWith(wallet);
     });
@@ -69,7 +54,7 @@ describe('findByWallet', () => {
         user: undefined,
       };
 
-      expect(await findByWalletUseCase.do(params)).toEqual({});
+      expect(await findByWalletUseCase.doit(params)).toEqual({});
 
       expect(userRepositoryMock.findByWallet).toHaveBeenCalledWith(wallet);
     });
