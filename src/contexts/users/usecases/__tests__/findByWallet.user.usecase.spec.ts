@@ -2,6 +2,7 @@ import { UserNotFoundError } from '../../user.error';
 import { FindByWalletUseCase } from '../findByWallet.user.usecase';
 
 const userRepositoryMock = {
+  create: jest.fn(),
   findByWallet: jest.fn(),
 };
 

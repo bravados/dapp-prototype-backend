@@ -18,7 +18,7 @@ class FindByWalletUseCaseDTO {
 
 const mapToWallet = ({ address }: FindByWalletUseCaseDTO) => {
   const wallet = new Wallet();
-  wallet.blockchain = Blockchain.NEAR;
+  wallet.blockchain = 'NEAR' as Blockchain;
   wallet.address = address;
 
   return wallet;

@@ -31,6 +31,13 @@ describe('User repository', () => {
           },
         },
       },
+      include: {
+        wallets: {
+          include: {
+            user: false, // break circle dep.
+          },
+        },
+      },
     };
 
     describe('when the wallet exists', () => {

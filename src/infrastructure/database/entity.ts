@@ -1,5 +1,5 @@
 abstract class Entity {
-  id: number;
+  id?: number;
 }
 
 export { Entity };

@@ -3,6 +3,7 @@ import { Wallet } from '@contexts/wallets/wallet.entity';
 import { User } from './user.entity';
 
 interface UserRepository {
+  create(user: User): Promise<User>;
   findByWallet(wallet: Wallet): Promise<User>;
 }
 
@@ -14,8 +15,28 @@ class UserPrismaRepository extends PrismaRepository implements UserRepository {
     this.repository = this.getClient().user;
   }
 
+  async create(user: User): Promise<User> {
+    const { wallets, ...rest } = user;
+
+    return await this.repository.create({
+      data: {
+        ...rest,
+        wallets: {
+          create: wallets,
+        },
+      },
+      include: {
+        wallets: {
+          include: {
+            user: false, // break circle dep.
+          },
+        },
+      },
+    });
+  }
+
   async findByWallet(wallet: Wallet): Promise<User> {
-    const user = await this.repository.findFirstOrThrow({
+    return this.repository.findFirstOrThrow({
       where: {
         wallets: {
           some: {
@@ -30,9 +51,14 @@ class UserPrismaRepository extends PrismaRepository implements UserRepository {
           },
         },
       },
+      include: {
+        wallets: {
+          include: {
+            user: false, // break circle dep.
+          },
+        },
+      },
     });
-
-    return user as User;
   }
 }
 

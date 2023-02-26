@@ -17,7 +17,8 @@ function IsSupportedBlockchain(validationOptions?: ValidationOptions) {
       validator: {
         validate(value: any) {
           return (
-            typeof value === 'string' && value.toUpperCase() == Blockchain.NEAR
+            typeof value === 'string' &&
+            value.toUpperCase() == ('NEAR' as Blockchain)
           ); // you can return a Promise<boolean> here as well, if you want to make async validation
         },
       },

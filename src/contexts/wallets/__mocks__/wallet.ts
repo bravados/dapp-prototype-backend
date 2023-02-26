@@ -1,11 +1,10 @@
-import { user as userMock } from '@contexts/users/__mocks__/user';
+import { user } from '@contexts/users/__mocks__/user';
 import { Blockchain } from '../wallet.entity';
 
 const wallet = {
-  id: 130,
-  blockchain: Blockchain.NEAR,
+  blockchain: 'NEAR' as Blockchain,
   address: 'ashketchum.near',
-  user: userMock,
+  user,
 };
 
 export { wallet };

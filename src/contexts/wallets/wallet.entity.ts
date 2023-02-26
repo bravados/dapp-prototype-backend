@@ -1,9 +1,7 @@
 import { User } from '@contexts/users/user.entity';
 import { Entity } from '@infrastructure/database/entity';
 
-enum Blockchain {
-  NEAR = 'NEAR',
-}
+type Blockchain = 'NEAR';
 
 class Wallet extends Entity {
   blockchain: Blockchain;
@@ -11,4 +9,5 @@ class Wallet extends Entity {
   user: User;
 }
 
-export { Wallet, Blockchain };
+export { Wallet };
+export type { Blockchain };
