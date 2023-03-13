@@ -13,8 +13,8 @@ CREATE TABLE `Wallet` (
 CREATE TABLE `User` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
-    `email` VARCHAR(191) NOT NULL,
-    `avatar` VARCHAR(191) NOT NULL,
+    `email` VARCHAR(191) NULL,
+    `avatar` VARCHAR(191) NULL,
     `type` ENUM('ARTIST', 'INDIVIDUAL', 'ADMIN') NOT NULL,
 
     UNIQUE INDEX `User_name_key`(`name`),

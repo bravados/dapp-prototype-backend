@@ -5,8 +5,8 @@ type UserType = 'ARTIST' | 'INDIVIDUAL' | 'ADMIN';
 
 class User extends Entity {
   name: string;
-  email: string;
-  avatar: string;
+  email?: string | null;
+  avatar?: string | null;
   type: UserType;
   wallets: Omit<Wallet, 'user'>[];
 }

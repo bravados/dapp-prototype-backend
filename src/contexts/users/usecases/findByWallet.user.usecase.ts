@@ -37,7 +37,20 @@ class FindByWalletUseCase {
     try {
       return await this.userRepository.findByWallet(wallet);
     } catch {
-      throw new UserNotFoundError();
+      try {
+        return await this.userRepository.create({
+          name: `${params.address}`,
+          type: 'INDIVIDUAL',
+          wallets: [
+            {
+              blockchain: params.blockchain.toUpperCase() as Blockchain,
+              address: params.address,
+            },
+          ],
+        });
+      } catch (err) {
+        throw new UserNotFoundError(err);
+      }
     }
   }
 }
