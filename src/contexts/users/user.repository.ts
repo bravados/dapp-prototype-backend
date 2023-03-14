@@ -4,7 +4,7 @@ import { User } from './user.entity';
 
 interface UserRepository {
   create(user: User): Promise<User>;
-  findByWallet(wallet: Wallet): Promise<User>;
+  findByWallet(wallet: Wallet): Promise<User | null>;
 }
 
 class UserPrismaRepository extends PrismaRepository implements UserRepository {
@@ -35,8 +35,8 @@ class UserPrismaRepository extends PrismaRepository implements UserRepository {
     });
   }
 
-  async findByWallet(wallet: Wallet): Promise<User> {
-    return this.repository.findFirstOrThrow({
+  async findByWallet(wallet: Wallet): Promise<User | null> {
+    return this.repository.findFirst({
       where: {
         wallets: {
           some: {

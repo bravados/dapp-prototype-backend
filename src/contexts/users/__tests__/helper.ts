@@ -1,11 +1,13 @@
 import { Test } from '@nestjs/testing';
 import { ValidationPipe } from '@nestjs/common/pipes';
 import { UserController } from '../user.controller';
-import { FindByWalletUseCase } from '../usecases/findByWallet.user.usecase';
+import { CreateUserUseCase } from '../usecases/createUser.usecase';
+import { GetUserUseCase } from '../usecases/getUser.usecase';
 import { UserRepository } from '../user.repository';
 
 type Providers = {
-  findByWalletUseCase?: FindByWalletUseCase;
+  createUserUseCase?: CreateUserUseCase;
+  getUserUseCase?: GetUserUseCase;
   userRepository?: UserRepository;
 };
 
@@ -14,8 +16,12 @@ const createApp = async (params: Providers) => {
     controllers: [UserController],
     providers: [
       {
-        provide: 'FindByWalletUseCase',
-        useValue: params.findByWalletUseCase,
+        provide: 'CreateUserUseCase',
+        useValue: params.createUserUseCase,
+      },
+      {
+        provide: 'GetUserUseCase',
+        useValue: params.getUserUseCase,
       },
       {
         provide: 'UserRepository',

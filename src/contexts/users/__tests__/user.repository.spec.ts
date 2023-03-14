@@ -2,18 +2,59 @@ import { wallet as walletMock } from '@contexts/wallets/__mocks__/wallet';
 import { UserPrismaRepository } from '../user.repository';
 import { user as userMock } from '../__mocks__/user';
 
-const findFirstOrThrowMock = jest.fn();
+const createMock = jest.fn();
+const findFirstMock = jest.fn();
 
 jest.mock('@prisma/client', () => ({
   PrismaClient: jest.fn().mockImplementation(() => ({
     user: {
-      findFirstOrThrow: findFirstOrThrowMock,
+      create: createMock,
+      findFirst: findFirstMock,
     },
   })),
 }));
 
 describe('User repository', () => {
   const repository = new UserPrismaRepository();
+
+  describe('create', () => {
+    describe('when creation successful', () => {
+      beforeEach(() => {
+        createMock.mockReturnValue(userMock);
+      });
+
+      it('returns the user', async () => {
+        const { wallets, ...rest } = userMock;
+
+        expect(await repository.create(userMock)).toBe(userMock);
+        expect(createMock).toHaveBeenCalledWith({
+          data: {
+            ...rest,
+            wallets: {
+              create: wallets,
+            },
+          },
+          include: {
+            wallets: {
+              include: {
+                user: false,
+              },
+            },
+          },
+        });
+      });
+    });
+
+    describe('when creation fails', () => {
+      beforeEach(() => {
+        createMock.mockRejectedValue(new Error());
+      });
+
+      it('throws error', () => {
+        expect(repository.create(userMock)).rejects.toThrowError();
+      });
+    });
+  });
 
   describe('findByWallet', () => {
     const conditions = {
@@ -42,26 +83,24 @@ describe('User repository', () => {
 
     describe('when the wallet exists', () => {
       beforeEach(() => {
-        findFirstOrThrowMock.mockReturnValue(userMock);
+        findFirstMock.mockReturnValue(userMock);
       });
 
       it('returns the user', async () => {
         const user = await repository.findByWallet(walletMock);
 
-        expect(findFirstOrThrowMock).toHaveBeenCalledWith(conditions);
+        expect(findFirstMock).toHaveBeenCalledWith(conditions);
         expect(user).toEqual(userMock);
       });
     });
 
     describe('when the wallet does not exist', () => {
       beforeEach(() => {
-        findFirstOrThrowMock.mockRejectedValue(new Error());
+        findFirstMock.mockReturnValue(null);
       });
 
-      it('throws an error', async () => {
-        await expect(
-          repository.findByWallet(walletMock),
-        ).rejects.toThrowError();
+      it('returns null', async () => {
+        expect(await repository.findByWallet(walletMock)).toBeNull();
       });
     });
   });

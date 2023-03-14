@@ -1,15 +1,19 @@
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import type { FindByWalletUseCase } from '../usecases/findByWallet.user.usecase';
+import { CreateUserUseCase } from '../usecases/createUser.usecase';
+import { GetUserUseCase } from '../usecases/getUser.usecase';
 import { UserRepository } from '../user.repository';
-import { UserNotFoundError } from '../user.error';
 import { createApp } from './helper';
+import { user as userMock } from '../__mocks__/user';
 
-const doit = jest.fn();
-
-const findByWalletUseCaseMock = {
+const createUserUseCaseMock = {
   userRepository: {},
-  doit,
+  doit: jest.fn(),
+};
+
+const getUserUseCaseMock = {
+  userRepository: {},
+  doit: jest.fn(),
 };
 
 const userRepositoryMock = {};
@@ -20,8 +24,8 @@ let server: any;
 describe('find user by wallet', () => {
   beforeAll(async () => {
     app = await createApp({
-      findByWalletUseCase:
-        findByWalletUseCaseMock as unknown as FindByWalletUseCase,
+      createUserUseCase: createUserUseCaseMock as unknown as CreateUserUseCase,
+      getUserUseCase: getUserUseCaseMock as unknown as GetUserUseCase,
       userRepository: userRepositoryMock as unknown as UserRepository,
     });
 
@@ -30,36 +34,65 @@ describe('find user by wallet', () => {
 
   describe('when the blockchain is not supported', () => {
     it('returns 400', () => {
-      return request(server).get('/users/ethereum/123').expect(400);
+      return request(server)
+        .post('/users')
+        .send({ blockchain: 'ethereum', address: '123' })
+        .expect(400);
     });
   });
 
   describe('when the address it not alphanumeric', () => {
     it('returns 400', () => {
-      return request(server).get('/users/near/-#!').expect(400);
+      return request(server)
+        .post('/users')
+        .send({ blockchain: 'near', address: '-#!' })
+        .expect(400);
     });
   });
 
-  describe('when the user is not found', () => {
-    beforeEach(() => {
-      doit.mockRejectedValue(new UserNotFoundError());
-    });
+  describe('getUser', () => {
+    describe('when the user exists', () => {
+      beforeEach(() => {
+        getUserUseCaseMock.doit.mockReturnValue(userMock);
+      });
 
-    it('returns 404', () => {
-      return request(server).get('/users/near/123').expect(404);
+      it('returns 200', () => {
+        request(server).get('/users/near/123').expect(200);
+      });
+    });
+    describe('when the user does not exist', () => {
+      beforeEach(() => {
+        getUserUseCaseMock.doit.mockReturnValue(null);
+      });
+
+      it('returns 404', () => {
+        request(server).get('/users/near/123').expect(404);
+      });
     });
   });
 
-  describe('when the user is found', () => {
-    beforeEach(() => {
-      doit.mockReturnValue({});
-    });
+  describe('createUser', () => {
+    describe('when the user cannot be created', () => {
+      beforeEach(() => {
+        createUserUseCaseMock.doit.mockRejectedValue(new Error());
+      });
 
-    it('returns the user', () => {
-      request(server).get('/users/near/123').expect(200);
-      expect(doit).toHaveBeenCalledWith({
-        blockchain: 'near',
-        address: '123',
+      it('returns 500', () => {
+        return request(server)
+          .post('/users')
+          .send({ blockchain: 'near', address: '123' })
+          .expect(500);
+      });
+    });
+    describe('when the user can be created', () => {
+      beforeEach(() => {
+        createUserUseCaseMock.doit.mockReturnValue(userMock);
+      });
+      it('returns 201', () => {
+        return request(server)
+          .post('/users')
+          .send({ blockchain: 'near', address: '123' })
+          .expect(201);
       });
     });
   });

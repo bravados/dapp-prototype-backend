@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
-import { FindByWalletUseCase } from './usecases/findByWallet.user.usecase';
+import { CreateUserUseCase } from './usecases/createUser.usecase';
+import { GetUserUseCase } from './usecases/getUser.usecase';
 import { UserController } from './user.controller';
 import { UserPrismaRepository } from './user.repository';
 
@@ -7,8 +8,12 @@ import { UserPrismaRepository } from './user.repository';
   controllers: [UserController],
   providers: [
     {
-      provide: 'FindByWalletUseCase',
-      useClass: FindByWalletUseCase,
+      provide: 'CreateUserUseCase',
+      useClass: CreateUserUseCase,
+    },
+    {
+      provide: 'GetUserUseCase',
+      useClass: GetUserUseCase,
     },
     {
       provide: 'UserRepository',
