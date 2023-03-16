@@ -11,6 +11,7 @@ jest.mock('@prisma/client', () => ({
       create: createMock,
       findFirst: findFirstMock,
     },
+    $on: jest.fn(),
   })),
 }));
 
