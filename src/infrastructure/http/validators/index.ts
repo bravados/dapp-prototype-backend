@@ -2,7 +2,7 @@ import { Blockchain } from '@contexts/wallets/wallet.entity';
 import {
   registerDecorator,
   ValidationOptions,
-  IsAlphanumeric,
+  IsNotEmpty,
 } from 'class-validator';
 
 function IsSupportedBlockchain(validationOptions?: ValidationOptions) {
@@ -26,4 +26,4 @@ function IsSupportedBlockchain(validationOptions?: ValidationOptions) {
   };
 }
 
-export { IsAlphanumeric, IsSupportedBlockchain };
+export { IsNotEmpty, IsSupportedBlockchain };

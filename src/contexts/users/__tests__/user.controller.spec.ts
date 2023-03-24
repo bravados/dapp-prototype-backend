@@ -21,7 +21,7 @@ const userRepositoryMock = {};
 let app: INestApplication;
 let server: any;
 
-describe('find user by wallet', () => {
+describe('UserController', () => {
   beforeAll(async () => {
     app = await createApp({
       createUserUseCase: createUserUseCaseMock as unknown as CreateUserUseCase,
@@ -41,11 +41,11 @@ describe('find user by wallet', () => {
     });
   });
 
-  describe('when the address it not alphanumeric', () => {
+  describe('when the address is empty', () => {
     it('returns 400', () => {
       return request(server)
         .post('/users')
-        .send({ blockchain: 'near', address: '-#!' })
+        .send({ blockchain: 'near', address: '' })
         .expect(400);
     });
   });

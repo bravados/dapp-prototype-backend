@@ -3,7 +3,7 @@ import { Blockchain, Wallet } from '@contexts/wallets/wallet.entity';
 import { UserRepository } from '../user.repository';
 import { User } from '../user.entity';
 import {
-  IsAlphanumeric,
+  IsNotEmpty,
   IsSupportedBlockchain,
 } from '@infrastructure/http/validators';
 
@@ -11,7 +11,7 @@ class GetUserDTO {
   @IsSupportedBlockchain({ message: 'Blockchain not supported' })
   blockchain: string;
 
-  @IsAlphanumeric()
+  @IsNotEmpty()
   address: string;
 }
 
