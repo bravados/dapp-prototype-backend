@@ -33,6 +33,7 @@ class CreateUserUseCase implements UseCase<User> {
           address: params.address,
         },
       ],
+      royalties: [],
     });
   }
 }

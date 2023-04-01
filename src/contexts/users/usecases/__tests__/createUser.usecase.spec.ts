@@ -34,6 +34,7 @@ describe('createUser', () => {
             address: getOrCreateDto.address,
           },
         ],
+        royalties: [],
       });
     });
   });

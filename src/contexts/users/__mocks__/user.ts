@@ -1,5 +1,12 @@
-import { Blockchain } from '@contexts/wallets/wallet.entity';
-import { UserType } from '../user.entity';
+import { Blockchain, Wallet } from '@contexts/wallets/wallet.entity';
+import { BasicUser, Royalty, User, UserType } from '../user.entity';
+
+const basicUser = {
+  name: 'Misty',
+  email: 'misty@pokemon.com',
+  avatar: 'https://some.path',
+  type: 'INDIVIDUAL' as UserType,
+} as BasicUser;
 
 const user = {
   name: 'Ash',
@@ -12,6 +19,16 @@ const user = {
       address: 'ashketchum.near',
     },
   ],
-};
+  royalties: [
+    {
+      wallet: {
+        blockchain: 'NEAR' as Blockchain,
+        address: 'misty.near',
+        user: basicUser,
+      } as Wallet,
+      percent: 10,
+    } as Royalty,
+  ],
+} as User;
 
-export { user };
+export { basicUser, user };

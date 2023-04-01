@@ -16,7 +16,8 @@ class UserPrismaRepository extends PrismaRepository implements UserRepository {
   }
 
   async create(user: User): Promise<User> {
-    const { wallets, ...rest } = user;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { wallets, royalties, ...rest } = user;
 
     return await this.repository.create({
       data: {
@@ -29,6 +30,21 @@ class UserPrismaRepository extends PrismaRepository implements UserRepository {
         wallets: {
           include: {
             user: false, // break circle dep.
+          },
+        },
+        royalties: {
+          include: {
+            user: false, // break circle dep.
+            wallet: {
+              include: {
+                user: {
+                  include: {
+                    wallets: false,
+                    royalties: false,
+                  },
+                },
+              },
+            },
           },
         },
       },
@@ -55,6 +71,21 @@ class UserPrismaRepository extends PrismaRepository implements UserRepository {
         wallets: {
           include: {
             user: false, // break circle dep.
+          },
+        },
+        royalties: {
+          include: {
+            user: false, // break circle dep.
+            wallet: {
+              include: {
+                user: {
+                  include: {
+                    wallets: false,
+                    royalties: false,
+                  },
+                },
+              },
+            },
           },
         },
       },

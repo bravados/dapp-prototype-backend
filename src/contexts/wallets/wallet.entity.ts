@@ -1,4 +1,4 @@
-import { User } from '@contexts/users/user.entity';
+import { BasicUser } from '@contexts/users/user.entity';
 import { Entity } from '@infrastructure/database/entity';
 
 type Blockchain = 'NEAR';
@@ -6,7 +6,7 @@ type Blockchain = 'NEAR';
 class Wallet extends Entity {
   blockchain: Blockchain;
   address: string;
-  user: User;
+  user: BasicUser;
 }
 
 export { Wallet };

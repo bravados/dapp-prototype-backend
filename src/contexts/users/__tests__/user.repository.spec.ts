@@ -25,7 +25,8 @@ describe('User repository', () => {
       });
 
       it('returns the user', async () => {
-        const { wallets, ...rest } = userMock;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { wallets, royalties, ...rest } = userMock;
 
         expect(await repository.create(userMock)).toBe(userMock);
         expect(createMock).toHaveBeenCalledWith({
@@ -38,7 +39,22 @@ describe('User repository', () => {
           include: {
             wallets: {
               include: {
-                user: false,
+                user: false, // break circle dep.
+              },
+            },
+            royalties: {
+              include: {
+                user: false, // break circle dep.
+                wallet: {
+                  include: {
+                    user: {
+                      include: {
+                        wallets: false,
+                        royalties: false,
+                      },
+                    },
+                  },
+                },
               },
             },
           },
@@ -77,6 +93,21 @@ describe('User repository', () => {
         wallets: {
           include: {
             user: false, // break circle dep.
+          },
+        },
+        royalties: {
+          include: {
+            user: false, // break circle dep.
+            wallet: {
+              include: {
+                user: {
+                  include: {
+                    wallets: false,
+                    royalties: false,
+                  },
+                },
+              },
+            },
           },
         },
       },
