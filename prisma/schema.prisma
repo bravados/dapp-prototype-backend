@@ -47,3 +47,14 @@ model User {
   wallets Wallet[]
   royalties Royalty[]
 }
+
+model Nft {
+  id String
+  title String?
+  description String?
+  media String
+  price String
+  blockchain Blockchain
+
+  @@id([id, blockchain])
+}

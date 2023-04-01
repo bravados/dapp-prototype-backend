@@ -3,6 +3,7 @@ import {
   registerDecorator,
   ValidationOptions,
   IsNotEmpty,
+  IsOptional,
 } from 'class-validator';
 
 function IsSupportedBlockchain(validationOptions?: ValidationOptions) {
@@ -26,4 +27,4 @@ function IsSupportedBlockchain(validationOptions?: ValidationOptions) {
   };
 }
 
-export { IsNotEmpty, IsSupportedBlockchain };
+export { IsNotEmpty, IsOptional, IsSupportedBlockchain };

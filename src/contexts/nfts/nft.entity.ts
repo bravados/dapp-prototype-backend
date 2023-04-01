@@ -1,5 +1,16 @@
+import { Blockchain } from '@contexts/wallets/wallet.entity';
+
 type IPFSFile = {
   cid: string;
 };
 
-export { IPFSFile };
+class Nft {
+  id: string;
+  title: Maybe<string>;
+  description: Maybe<string>;
+  media: string;
+  price: string;
+  blockchain: Blockchain;
+}
+
+export { IPFSFile, Nft };

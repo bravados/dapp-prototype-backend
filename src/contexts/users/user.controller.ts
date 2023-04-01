@@ -5,6 +5,7 @@ import {
   HttpException,
   HttpStatus,
   Inject,
+  Logger,
   Param,
   Post,
   UseInterceptors,
@@ -43,6 +44,7 @@ class UserController {
     try {
       return await this.createUserUseCase.doit(createUserDTO);
     } catch {
+      Logger.error('User was not created: ', createUserDTO);
       throw new HttpException(
         'User was not created',
         HttpStatus.INTERNAL_SERVER_ERROR,
