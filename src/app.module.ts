@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { configuration } from '@config/configuration';
 import { HealthModule } from '@/infrastructure/health/health.module';
 import { UserModule } from '@contexts/users/user.module';
+import { NftsModule } from '@contexts/nfts/nfts.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { UserModule } from '@contexts/users/user.module';
       envFilePath: ['.env'],
     }),
     UserModule,
+    NftsModule,
     HealthModule,
   ],
   controllers: [],
