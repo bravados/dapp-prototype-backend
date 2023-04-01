@@ -23,8 +23,19 @@ model Wallet {
   address String
   userId Int
   user User @relation(fields: [userId], references: [id])
+  royalties Royalty[]
 
   @@unique([blockchain, address])
+}
+
+model Royalty {
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+  walletId Int
+  wallet Wallet @relation(fields: [walletId], references: [id])
+  percent Int
+
+  @@id([userId, walletId])
 }
 
 model User {
@@ -34,4 +45,5 @@ model User {
   avatar String? @unique
   type UserType
   wallets Wallet[]
+  royalties Royalty[]
 }
