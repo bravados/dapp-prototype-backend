@@ -15,7 +15,7 @@ class FilesController {
     private readonly storeFileUseCase: StoreFileUseCase,
   ) {}
 
-  @Post('store')
+  @Post()
   @UseInterceptors(FileInterceptor('file'))
   create(@UploadedFile() file: Express.Multer.File) {
     return this.storeFileUseCase.doit(file);
