@@ -5,6 +5,7 @@ import { NftPrismaRepository } from './nft.repository';
 import { StorageService } from './storage.service';
 import { CreateNftUseCase } from './usecases/createNft.usecase';
 import { StoreFileUseCase } from './usecases/storeFile.usecase';
+import { GetNftUseCase } from './usecases/getNft.usecase';
 
 @Module({
   controllers: [FilesController, NftsController],
@@ -16,6 +17,10 @@ import { StoreFileUseCase } from './usecases/storeFile.usecase';
     {
       provide: 'CreateNftUseCase',
       useClass: CreateNftUseCase,
+    },
+    {
+      provide: 'GetNftUseCase',
+      useClass: GetNftUseCase,
     },
     {
       provide: 'StorageService',

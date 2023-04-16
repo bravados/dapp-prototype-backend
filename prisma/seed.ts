@@ -9,7 +9,7 @@ async function main() {
     create: {
       email: 'alice@crystalcastles.com',
       name: 'Alice Glass',
-      type: 'ADMIN',
+      type: 'INDIVIDUAL',
       avatar: 'avatar-path-20230226',
       wallets: {
         create: [
@@ -22,6 +22,26 @@ async function main() {
     },
   });
   console.log({ alice });
+
+  const bravado = await prisma.user.upsert({
+    where: { email: 'bravado@me.com' },
+    update: {},
+    create: {
+      email: 'bravado@me.com',
+      name: 'Bravado',
+      type: 'ADMIN',
+      avatar: 'avatar-path-20230416',
+      wallets: {
+        create: [
+          {
+            blockchain: 'NEAR',
+            address: '124',
+          },
+        ],
+      },
+    },
+  });
+  console.log({ bravado });
 }
 main()
   .then(async () => {
