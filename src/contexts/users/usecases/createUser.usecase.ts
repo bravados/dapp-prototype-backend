@@ -34,6 +34,7 @@ class CreateUserUseCase implements UseCase<User> {
         },
       ],
       royalties: [],
+      nfts: [],
     });
   }
 }

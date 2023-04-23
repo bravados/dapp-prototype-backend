@@ -1,5 +1,6 @@
 import { Entity } from '@infrastructure/database/entity';
 import { Wallet } from '@contexts/wallets/wallet.entity';
+import { Nft } from '@contexts/nfts/nft.entity';
 
 type UserType = 'ARTIST' | 'INDIVIDUAL' | 'ADMIN';
 
@@ -19,6 +20,7 @@ class BasicUser extends Entity {
 class User extends BasicUser {
   wallets: Omit<Wallet, 'user'>[];
   royalties: Omit<Royalty, 'user'>[];
+  nfts: Nft[];
 }
 
 export { BasicUser, User, Royalty };

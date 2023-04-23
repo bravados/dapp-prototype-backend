@@ -22,6 +22,14 @@ class NftPrismaRepository extends PrismaRepository implements NftRepository {
     return await this.repository.create({
       data: {
         ...nft,
+        creator: {
+          connect: {
+            id: nft.creator.id,
+          },
+        },
+      },
+      include: {
+        creator: true,
       },
     });
   }
@@ -36,6 +44,9 @@ class NftPrismaRepository extends PrismaRepository implements NftRepository {
           id,
           blockchain,
         },
+      },
+      include: {
+        creator: true,
       },
     });
   }

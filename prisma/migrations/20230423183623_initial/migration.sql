@@ -38,6 +38,8 @@ CREATE TABLE `Nft` (
     `title` VARCHAR(191) NULL,
     `description` VARCHAR(191) NULL,
     `media` VARCHAR(191) NOT NULL,
+    `creatorId` INTEGER NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `blockchain` ENUM('NEAR') NOT NULL,
 
     PRIMARY KEY (`id`, `blockchain`)
@@ -51,3 +53,6 @@ ALTER TABLE `Royalty` ADD CONSTRAINT `Royalty_userId_fkey` FOREIGN KEY (`userId`
 
 -- AddForeignKey
 ALTER TABLE `Royalty` ADD CONSTRAINT `Royalty_walletId_fkey` FOREIGN KEY (`walletId`) REFERENCES `Wallet`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Nft` ADD CONSTRAINT `Nft_creatorId_fkey` FOREIGN KEY (`creatorId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

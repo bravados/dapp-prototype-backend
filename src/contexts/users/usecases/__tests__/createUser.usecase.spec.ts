@@ -35,6 +35,7 @@ describe('createUser', () => {
           },
         ],
         royalties: [],
+        nfts: [],
       });
     });
   });

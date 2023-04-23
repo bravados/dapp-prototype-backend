@@ -9,6 +9,7 @@ class Nft {
   title: Maybe<string>;
   description: Maybe<string>;
   media: string;
+  creator: { id: number };
   blockchain: Blockchain;
 }
 

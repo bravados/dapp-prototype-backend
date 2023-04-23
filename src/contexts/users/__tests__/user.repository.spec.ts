@@ -26,7 +26,7 @@ describe('User repository', () => {
 
       it('returns the user', async () => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { wallets, royalties, ...rest } = userMock;
+        const { wallets, royalties, nfts, ...rest } = userMock;
 
         expect(await repository.create(userMock)).toBe(userMock);
         expect(createMock).toHaveBeenCalledWith({
@@ -55,6 +55,11 @@ describe('User repository', () => {
                     },
                   },
                 },
+              },
+            },
+            nfts: {
+              include: {
+                creator: true,
               },
             },
           },
@@ -108,6 +113,11 @@ describe('User repository', () => {
                 },
               },
             },
+          },
+        },
+        nfts: {
+          include: {
+            creator: true,
           },
         },
       },

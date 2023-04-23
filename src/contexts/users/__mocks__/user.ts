@@ -29,6 +29,7 @@ const user = {
       percent: 10,
     } as Royalty,
   ],
+  nfts: [],
 } as User;
 
 export { basicUser, user };

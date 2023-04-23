@@ -22,6 +22,9 @@ class CreateNftDTO {
   @IsNotEmpty()
   media: string;
 
+  @IsNotEmpty()
+  creator: { id: number };
+
   @IsSupportedBlockchain({ message: 'Blockchain not supported' })
   blockchain: string;
 }
@@ -37,6 +40,7 @@ class CreateNftUseCase implements UseCase<Nft> {
     title,
     description,
     media,
+    creator,
     blockchain,
   }: CreateNftDTO): Promise<Nft> {
     return this.nftRepository.create({
@@ -44,6 +48,7 @@ class CreateNftUseCase implements UseCase<Nft> {
       title,
       description,
       media,
+      creator,
       blockchain: blockchain as Blockchain,
     });
   }

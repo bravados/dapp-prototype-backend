@@ -46,6 +46,7 @@ model User {
   type UserType
   wallets Wallet[]
   royalties Royalty[]
+  nfts Nft[]
 }
 
 model Nft {
@@ -53,6 +54,9 @@ model Nft {
   title String?
   description String?
   media String
+  creatorId Int
+  creator User @relation(fields: [creatorId], references: [id])
+  createdAt DateTime @default(now())
   blockchain Blockchain
 
   @@id([id, blockchain])
