@@ -29,13 +29,13 @@ async function main() {
     create: {
       email: 'bravado@me.com',
       name: 'Bravado',
-      type: 'ADMIN',
+      type: 'ARTIST',
       avatar: 'avatar-path-20230416',
       wallets: {
         create: [
           {
             blockchain: 'NEAR',
-            address: '124',
+            address: 'bravado.testnet',
           },
         ],
       },
