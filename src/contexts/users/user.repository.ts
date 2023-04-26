@@ -4,7 +4,9 @@ import { User } from './user.entity';
 
 interface UserRepository {
   create(user: User): Promise<User>;
+  findById(id: number): Promise<User | null>;
   findByWallet(wallet: Wallet): Promise<User | null>;
+  getAllIds(): Promise<number[]>;
 }
 
 class UserPrismaRepository extends PrismaRepository implements UserRepository {
@@ -25,6 +27,41 @@ class UserPrismaRepository extends PrismaRepository implements UserRepository {
         wallets: {
           create: wallets,
         },
+      },
+      include: {
+        wallets: {
+          include: {
+            user: false, // break circle dep.
+          },
+        },
+        royalties: {
+          include: {
+            user: false, // break circle dep.
+            wallet: {
+              include: {
+                user: {
+                  include: {
+                    wallets: false,
+                    royalties: false,
+                  },
+                },
+              },
+            },
+          },
+        },
+        nfts: {
+          include: {
+            creator: true,
+          },
+        },
+      },
+    });
+  }
+
+  findById(id: number): Promise<User | null> {
+    return this.repository.findUnique({
+      where: {
+        id,
       },
       include: {
         wallets: {
@@ -100,6 +137,16 @@ class UserPrismaRepository extends PrismaRepository implements UserRepository {
         },
       },
     });
+  }
+
+  async getAllIds(): Promise<number[]> {
+    const users = await this.repository.findMany({
+      select: {
+        id: true,
+      },
+    });
+
+    return users.map((user) => user.id);
   }
 }
 
