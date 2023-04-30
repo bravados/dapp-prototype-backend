@@ -22,6 +22,10 @@ import {
   GetUserByIdDTO,
   GetUserByIdUseCase,
 } from './usecases/getUserById.usecase';
+import {
+  UpdateUserProfileDTO,
+  UpdateUserProfileUseCase,
+} from './usecases/updateUserProfile.usecase';
 
 @Controller('/users')
 @UseInterceptors(VerifiedUserInterceptor)
@@ -35,6 +39,8 @@ class UserController {
     private getUserByIdUseCase: GetUserByIdUseCase,
     @Inject('CreateUserUseCase')
     private createUserUseCase: CreateUserUseCase,
+    @Inject('UpdateUserProfileUseCase')
+    private updateUserProfileUseCase: UpdateUserProfileUseCase,
   ) {}
 
   @Get('/:blockchain/:address')
@@ -49,10 +55,10 @@ class UserController {
   }
 
   @Get('/ids')
-  async getUserIds(): Promise<number[]> {
+  async getUserIds(): Promise<{ ids: number[] }> {
     const ids = await this.getUserIdsUseCase.doit();
 
-    return ids;
+    return { ids };
   }
 
   @Get('/:id')
@@ -74,6 +80,23 @@ class UserController {
       Logger.error('User was not created: ', createUserDTO);
       throw new HttpException(
         'User was not created',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @Post('/:id/update-profile')
+  async updateUserProfile(
+    @Param('id') id: string,
+    @Body() updateUserProfileDTO: UpdateUserProfileDTO,
+  ): Promise<User> {
+    try {
+      updateUserProfileDTO.id = parseInt(id);
+      return await this.updateUserProfileUseCase.doit(updateUserProfileDTO);
+    } catch {
+      Logger.error('User profile was not updated: ', updateUserProfileDTO);
+      throw new HttpException(
+        'User profile was not updated',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

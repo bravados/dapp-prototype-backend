@@ -5,6 +5,7 @@ import { UserController } from './user.controller';
 import { UserPrismaRepository } from './user.repository';
 import { GetUserIdsUseCase } from './usecases/getUserIds.usecase';
 import { GetUserByIdUseCase } from './usecases/getUserById.usecase';
+import { UpdateUserProfileUseCase } from './usecases/updateUserProfile.usecase';
 
 @Module({
   controllers: [UserController],
@@ -24,6 +25,10 @@ import { GetUserByIdUseCase } from './usecases/getUserById.usecase';
     {
       provide: 'GetUserByIdUseCase',
       useClass: GetUserByIdUseCase,
+    },
+    {
+      provide: 'UpdateUserProfileUseCase',
+      useClass: UpdateUserProfileUseCase,
     },
     {
       provide: 'UserRepository',

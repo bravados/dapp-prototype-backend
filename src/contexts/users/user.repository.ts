@@ -7,6 +7,7 @@ interface UserRepository {
   findById(id: number): Promise<User | null>;
   findByWallet(wallet: Wallet): Promise<User | null>;
   getAllIds(): Promise<number[]>;
+  update(user: User): Promise<User>;
 }
 
 class UserPrismaRepository extends PrismaRepository implements UserRepository {
@@ -147,6 +148,47 @@ class UserPrismaRepository extends PrismaRepository implements UserRepository {
     });
 
     return users.map((user) => user.id);
+  }
+
+  async update(user: User): Promise<User> {
+    const { name, email } = user;
+
+    return await this.repository.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        name,
+        email,
+      },
+      include: {
+        wallets: {
+          include: {
+            user: false, // break circle dep.
+          },
+        },
+        royalties: {
+          include: {
+            user: false, // break circle dep.
+            wallet: {
+              include: {
+                user: {
+                  include: {
+                    wallets: false,
+                    royalties: false,
+                  },
+                },
+              },
+            },
+          },
+        },
+        nfts: {
+          include: {
+            creator: true,
+          },
+        },
+      },
+    });
   }
 }
 
