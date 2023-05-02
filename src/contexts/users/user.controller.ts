@@ -8,8 +8,10 @@ import {
   Logger,
   Param,
   Post,
+  UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { VerifiedUserInterceptor } from '@infrastructure/http/interceptors';
 import { User } from './user.entity';
 import { GetUserUseCase, GetUserDTO } from './usecases/getUser.usecase';
@@ -26,6 +28,15 @@ import {
   UpdateUserProfileDTO,
   UpdateUserProfileUseCase,
 } from './usecases/updateUserProfile.usecase';
+import {
+  UploadFileResponse,
+  UploadUserAvatarDTO,
+  UploadUserAvatarUseCase,
+} from './usecases/uploadUserAvatar.usecase';
+import {
+  RemoveUserAvatarDTO,
+  RemoveUserAvatarUseCase,
+} from './usecases/removeUserAvatar.usecase';
 
 @Controller('/users')
 @UseInterceptors(VerifiedUserInterceptor)
@@ -39,6 +50,10 @@ class UserController {
     private getUserByIdUseCase: GetUserByIdUseCase,
     @Inject('CreateUserUseCase')
     private createUserUseCase: CreateUserUseCase,
+    @Inject('RemoveUserAvatarUseCase')
+    private removeUserAvatarUseCase: RemoveUserAvatarUseCase,
+    @Inject('UploadUserAvatarUseCase')
+    private uploadUserAvatarUseCase: UploadUserAvatarUseCase,
     @Inject('UpdateUserProfileUseCase')
     private updateUserProfileUseCase: UpdateUserProfileUseCase,
   ) {}
@@ -80,6 +95,43 @@ class UserController {
       Logger.error('User was not created: ', createUserDTO);
       throw new HttpException(
         'User was not created',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @Post('/:id/remove-avatar')
+  async removeUserAvatar(@Param('id') id: string): Promise<void> {
+    const removeUserAvatarDTO = new RemoveUserAvatarDTO();
+    removeUserAvatarDTO.userId = id;
+
+    try {
+      return await this.removeUserAvatarUseCase.doit(removeUserAvatarDTO);
+    } catch {
+      Logger.error('User avatar was not removed: ', removeUserAvatarDTO);
+      throw new HttpException(
+        'User avatar was not removed',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @Post('/:id/upload-avatar')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadUserAvatar(
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<UploadFileResponse> {
+    const uploadUserAvatarDTO = new UploadUserAvatarDTO();
+    uploadUserAvatarDTO.userId = id;
+    uploadUserAvatarDTO.file = file;
+
+    try {
+      return await this.uploadUserAvatarUseCase.doit(uploadUserAvatarDTO);
+    } catch {
+      Logger.error('User avatar was not updated: ', uploadUserAvatarDTO);
+      throw new HttpException(
+        'User avatar was not updated',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

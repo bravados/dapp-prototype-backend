@@ -22,12 +22,11 @@ class UpdateUserProfileUseCase implements UseCase<User> {
   ) {}
 
   doit(params: UpdateUserProfileDTO): Promise<User> {
-    const user = new User();
-    user.id = params.id;
-    user.name = params.name;
-    user.email = params.email;
-
-    return this.userRepository.update(user);
+    return this.userRepository.updateProfileData({
+      userId: params.id,
+      name: params.name,
+      email: params.email,
+    });
   }
 }
 

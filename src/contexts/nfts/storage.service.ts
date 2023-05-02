@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Blob, NFTStorage } from 'nft.storage';
+import { IPFSFile } from './nft.entity';
 
 interface EnvironmentVariables {
   IPFS_TOKEN: string;
@@ -24,6 +25,10 @@ class StorageService {
     return {
       cid,
     };
+  }
+
+  async delete({ cid }: IPFSFile) {
+    return await this.nftStorageClient.delete(cid);
   }
 }
 

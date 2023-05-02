@@ -6,6 +6,7 @@ import { StorageService } from './storage.service';
 import { CreateNftUseCase } from './usecases/createNft.usecase';
 import { StoreFileUseCase } from './usecases/storeFile.usecase';
 import { GetNftUseCase } from './usecases/getNft.usecase';
+import { DeleteFileUseCase } from './usecases/deleteFile.usecase';
 
 @Module({
   controllers: [FilesController, NftsController],
@@ -17,6 +18,10 @@ import { GetNftUseCase } from './usecases/getNft.usecase';
     {
       provide: 'CreateNftUseCase',
       useClass: CreateNftUseCase,
+    },
+    {
+      provide: 'DeleteFileUseCase',
+      useClass: DeleteFileUseCase,
     },
     {
       provide: 'GetNftUseCase',

@@ -2,12 +2,24 @@ import { PrismaRepository } from '@infrastructure/database/prisma.repository';
 import { Wallet } from '@contexts/wallets/wallet.entity';
 import { User } from './user.entity';
 
+type UpdateAvatarParams = {
+  userId: number;
+  filename: string | null;
+};
+
+type UpdateProfileParams = {
+  userId: number;
+  name: string;
+  email?: string;
+};
+
 interface UserRepository {
   create(user: User): Promise<User>;
   findById(id: number): Promise<User | null>;
   findByWallet(wallet: Wallet): Promise<User | null>;
   getAllIds(): Promise<number[]>;
-  update(user: User): Promise<User>;
+  updateAvatar(params: UpdateAvatarParams): Promise<User>;
+  updateProfileData(params: UpdateProfileParams): Promise<User>;
 }
 
 class UserPrismaRepository extends PrismaRepository implements UserRepository {
@@ -150,12 +162,52 @@ class UserPrismaRepository extends PrismaRepository implements UserRepository {
     return users.map((user) => user.id);
   }
 
-  async update(user: User): Promise<User> {
-    const { name, email } = user;
-
+  async updateAvatar({ userId, filename }: UpdateAvatarParams): Promise<User> {
     return await this.repository.update({
       where: {
-        id: user.id,
+        id: userId,
+      },
+      data: {
+        avatar: filename,
+      },
+      include: {
+        wallets: {
+          include: {
+            user: false, // break circle dep.
+          },
+        },
+        royalties: {
+          include: {
+            user: false, // break circle dep.
+            wallet: {
+              include: {
+                user: {
+                  include: {
+                    wallets: false,
+                    royalties: false,
+                  },
+                },
+              },
+            },
+          },
+        },
+        nfts: {
+          include: {
+            creator: true,
+          },
+        },
+      },
+    });
+  }
+
+  async updateProfileData({
+    userId,
+    name,
+    email,
+  }: UpdateProfileParams): Promise<User> {
+    return await this.repository.update({
+      where: {
+        id: userId,
       },
       data: {
         name,
