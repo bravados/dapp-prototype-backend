@@ -12,6 +12,7 @@ import {
 import { Nft } from './nft.entity';
 import { CreateNftDTO, CreateNftUseCase } from './usecases/createNft.usecase';
 import { GetNftDTO, GetNftUseCase } from './usecases/getNft.usecase';
+import { GetNftIdsDTO, GetNftIdsUseCase } from './usecases/getNftIds.usecase';
 
 @Controller('nfts')
 class NftsController {
@@ -20,7 +21,9 @@ class NftsController {
     private readonly createNftUseCase: CreateNftUseCase,
     @Inject('GetNftUseCase')
     private readonly getNftUseCase: GetNftUseCase,
-  ) {}
+    @Inject('GetNftIdsUseCase')
+    private readonly getNftIdsUseCase: GetNftIdsUseCase,
+  ) { }
 
   @Post()
   async createNft(@Body() createNftDTO: CreateNftDTO): Promise<Nft> {
@@ -44,6 +47,14 @@ class NftsController {
     }
     return nft;
   }
+
+  @Get('/:blockchain')
+  async getNftIds(@Param() getNftIdsDTO: GetNftIdsDTO): Promise<string[]> {
+    const nftIds = await this.getNftIdsUseCase.doit(getNftIdsDTO);
+
+    return nftIds;
+  }
+
 }
 
 export { NftsController };

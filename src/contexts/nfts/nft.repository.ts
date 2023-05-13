@@ -4,10 +4,15 @@ import { Blockchain } from '@contexts/wallets/wallet.entity';
 
 interface NftRepository {
   create(nft: Nft): Promise<Nft>;
+
   findByBlockchainAndId(
     blockchain: Blockchain,
     id: string,
   ): Promise<Nft | null>;
+
+  getAllIdsByBlockchain(
+    blockchain: Blockchain,
+  ): Promise<string[]>;
 }
 
 class NftPrismaRepository extends PrismaRepository implements NftRepository {
@@ -49,6 +54,20 @@ class NftPrismaRepository extends PrismaRepository implements NftRepository {
         creator: true,
       },
     });
+  }
+
+  async getAllIdsByBlockchain(blockchain: 'NEAR'): Promise<string[]> {
+    const nfts = await this.repository.findMany({
+      where: {
+        blockchain: {
+          equals: blockchain,
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+    return nfts.map((nft) => nft.id);
   }
 }
 

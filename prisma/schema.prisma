@@ -60,4 +60,5 @@ model Nft {
   blockchain Blockchain
 
   @@id([id, blockchain])
+  @@index([blockchain])
 }
