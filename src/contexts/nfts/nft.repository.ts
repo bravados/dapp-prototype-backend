@@ -1,9 +1,10 @@
 import { PrismaRepository } from '@infrastructure/database/prisma.repository';
-import { Nft } from './nft.entity';
 import { Blockchain } from '@contexts/wallets/wallet.entity';
+import { Nft } from './nft.entity';
+import { CreateNftDTO } from './usecases/createNft.usecase';
 
 interface NftRepository {
-  create(nft: Nft): Promise<Nft>;
+  create(createNftDTO: CreateNftDTO): Promise<Nft>;
 
   findByBlockchainAndId(
     blockchain: Blockchain,
@@ -23,13 +24,17 @@ class NftPrismaRepository extends PrismaRepository implements NftRepository {
     this.repository = this.getClient().nft;
   }
 
-  async create(nft: Nft): Promise<Nft> {
+  async create(createNftDTO: CreateNftDTO): Promise<Nft> {
     return await this.repository.create({
       data: {
-        ...nft,
+        id: createNftDTO.id,
+        title: createNftDTO.title,
+        description: createNftDTO.description,
+        media: createNftDTO.media,
+        blockchain: createNftDTO.blockchain as Blockchain,
         creator: {
           connect: {
-            id: nft.creator.id,
+            id: createNftDTO.creator.id,
           },
         },
       },

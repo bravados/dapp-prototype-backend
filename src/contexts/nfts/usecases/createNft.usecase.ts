@@ -13,10 +13,8 @@ class CreateNftDTO {
   @IsNotEmpty()
   id: string;
 
-  @IsOptional()
   title: string;
 
-  @IsOptional()
   description: string;
 
   @IsNotEmpty()

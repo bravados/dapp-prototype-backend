@@ -1,3 +1,4 @@
+import { BasicUser, User } from '@contexts/users/user.entity';
 import { Blockchain } from '@contexts/wallets/wallet.entity';
 
 type IPFSFile = {
@@ -9,7 +10,7 @@ class Nft {
   title: Maybe<string>;
   description: Maybe<string>;
   media: string;
-  creator: { id: number };
+  creator: BasicUser;
   blockchain: Blockchain;
 }
 
