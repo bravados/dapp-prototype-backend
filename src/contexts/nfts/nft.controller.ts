@@ -49,10 +49,10 @@ class NftsController {
   }
 
   @Get('/:blockchain')
-  async getNftIds(@Param() getNftIdsDTO: GetNftIdsDTO): Promise<string[]> {
-    const nftIds = await this.getNftIdsUseCase.doit(getNftIdsDTO);
+  async getNftIds(@Param() getNftIdsDTO: GetNftIdsDTO): Promise<{ ids: string[] }> {
+    const ids = await this.getNftIdsUseCase.doit(getNftIdsDTO);
 
-    return nftIds;
+    return {ids};
   }
 
 }
