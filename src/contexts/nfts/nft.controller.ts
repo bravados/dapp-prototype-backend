@@ -13,6 +13,8 @@ import { Nft } from './nft.entity';
 import { CreateNftDTO, CreateNftUseCase } from './usecases/createNft.usecase';
 import { GetNftDTO, GetNftUseCase } from './usecases/getNft.usecase';
 import { GetNftIdsDTO, GetNftIdsUseCase } from './usecases/getNftIds.usecase';
+import { NftList } from './nft.types';
+import { GetNftsUseCase } from './usecases/getNfts.usecase';
 
 @Controller('nfts')
 class NftsController {
@@ -21,9 +23,11 @@ class NftsController {
     private readonly createNftUseCase: CreateNftUseCase,
     @Inject('GetNftUseCase')
     private readonly getNftUseCase: GetNftUseCase,
+    @Inject('GetNftsUseCase')
+    private readonly getNftsUseCase: GetNftsUseCase,
     @Inject('GetNftIdsUseCase')
     private readonly getNftIdsUseCase: GetNftIdsUseCase,
-  ) { }
+  ) {}
 
   @Post()
   async createNft(@Body() createNftDTO: CreateNftDTO): Promise<Nft> {
@@ -38,6 +42,13 @@ class NftsController {
     }
   }
 
+  @Get()
+  async getNfts(): Promise<NftList> {
+    const nfts = await this.getNftsUseCase.doit();
+
+    return nfts;
+  }
+
   @Get('/:blockchain/:id')
   async getNft(@Param() getNftDTO: GetNftDTO): Promise<Nft> {
     const nft = await this.getNftUseCase.doit(getNftDTO);
@@ -49,12 +60,13 @@ class NftsController {
   }
 
   @Get('/:blockchain')
-  async getNftIds(@Param() getNftIdsDTO: GetNftIdsDTO): Promise<{ ids: string[] }> {
+  async getNftIds(
+    @Param() getNftIdsDTO: GetNftIdsDTO,
+  ): Promise<{ ids: string[] }> {
     const ids = await this.getNftIdsUseCase.doit(getNftIdsDTO);
 
-    return {ids};
+    return { ids };
   }
-
 }
 
 export { NftsController };

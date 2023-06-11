@@ -8,6 +8,7 @@ import { StoreFileUseCase } from './usecases/storeFile.usecase';
 import { GetNftUseCase } from './usecases/getNft.usecase';
 import { DeleteFileUseCase } from './usecases/deleteFile.usecase';
 import { GetNftIdsUseCase } from './usecases/getNftIds.usecase';
+import { GetNftsUseCase } from './usecases/getNfts.usecase';
 
 @Module({
   controllers: [FilesController, NftsController],
@@ -29,6 +30,10 @@ import { GetNftIdsUseCase } from './usecases/getNftIds.usecase';
       useClass: GetNftUseCase,
     },
     {
+      provide: 'GetNftsUseCase',
+      useClass: GetNftsUseCase,
+    },
+    {
       provide: 'GetNftIdsUseCase',
       useClass: GetNftIdsUseCase,
     },
@@ -42,4 +47,4 @@ import { GetNftIdsUseCase } from './usecases/getNftIds.usecase';
     },
   ],
 })
-export class NftsModule { }
+export class NftsModule {}

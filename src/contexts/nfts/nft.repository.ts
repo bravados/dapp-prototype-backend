@@ -11,9 +11,9 @@ interface NftRepository {
     id: string,
   ): Promise<Nft | null>;
 
-  getAllIdsByBlockchain(
-    blockchain: Blockchain,
-  ): Promise<string[]>;
+  findAll(): Promise<Nft[]>;
+
+  getAllIdsByBlockchain(blockchain: Blockchain): Promise<string[]>;
 }
 
 class NftPrismaRepository extends PrismaRepository implements NftRepository {
@@ -41,6 +41,19 @@ class NftPrismaRepository extends PrismaRepository implements NftRepository {
       include: {
         creator: true,
       },
+    });
+  }
+
+  async findAll(): Promise<Nft[]> {
+    return this.repository.findMany({
+      include: {
+        creator: true,
+      },
+      orderBy: [
+        {
+          createdAt: 'desc',
+        },
+      ],
     });
   }
 
