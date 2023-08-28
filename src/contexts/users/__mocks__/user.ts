@@ -10,7 +10,7 @@ const basicUser = {
 
 const user = {
   name: 'Ash',
-  email: 'Ash@kirunalabs.io',
+  email: 'Ash@dapp-prototype.io',
   avatar: 'https://some.path',
   type: 'ADMIN' as UserType,
   wallets: [
